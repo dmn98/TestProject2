@@ -1,15 +1,24 @@
 package pages;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import net.thucydides.core.pages.PageObject;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 public class SignUpPage {
+    WebDriver driver;
+    
+    public SignUpPage(WebDriver driver){
+        this.driver = driver;
+    }
 
 
 
@@ -35,85 +44,83 @@ public class SignUpPage {
     // Для ошибки в подтверждении, что пользователь не робот
     private By errorMessage5 = By.xpath("/html[1]/body[1]/div[1]/main[1]/div[2]/form[1]/div[10]/div[2]");
     private String errorMessageText = "//div[contains(text(),'%s')]";
-
-    public SignUpPage open(){
-        Selenide.open("/");
-        return this;
-    }
-
+    
     public SignUpPage typeEmail(String email){
-        $(emailField).setValue(email);
+        driver.findElement(emailField).sendKeys(email);
         return this;
     }
 
     public SignUpPage typeConfirmEmail(String email){
-        $(confirmEmail).setValue(email);
+        driver.findElement(confirmEmail).sendKeys(email);
         return this;
     }
 
     public SignUpPage typePassword(String password){
-        $(passwordField).setValue(password);
+        driver.findElement(passwordField).sendKeys(password);
         return this;
     }
 
     public SignUpPage typeName(String name){
-        $(nameField).setValue(name);
+        driver.findElement(nameField).sendKeys(name);
         return this;
     }
 
     public SignUpPage typeDay(String day){
-        $(dayOfBirthField).setValue(day);
+        driver.findElement(dayOfBirthField).sendKeys(day);
         return this;
     }
 
     public SignUpPage setMonth(String month){
-        $(monthDropDown).selectOption(month);
-//                click();
-//        new WebDriverWait(driver,5).until(visibilityOfElementLocated(By.xpath(format(monthDropDownOption, month)))).click();
+        driver.findElement(monthDropDown).click();
+        new WebDriverWait(driver,5).until(visibilityOfElementLocated(By.xpath(format(monthDropDownOption, month)))).click();
         return this;
     }
 
     public SignUpPage typeYear(String year){
-        $(yearOfBirthField).setValue(year);
+        driver.findElement(yearOfBirthField).sendKeys(year);
         return this;
     }
 
     public SignUpPage setSex(String value){
-        $(sexRadioButton).selectRadio(value);
-        return this;
+       driver.findElement(By.xpath(format(sexRadioButton, value))).click();
+       return this;
     }
 
     public SignUpPage setShare(boolean value){
-        $(shareCheckBox).click();
+        WebElement checkbox = driver.findElement(shareCheckBox);
+        if (!checkbox.isSelected() == value){
+            checkbox.click();
+        }
         return this;
     }
 
     public void clickSignUpButton(){
-        $(signUpButton).click();
+        driver.findElement(signUpButton).click();
     }
 
-    public ElementsCollection getErrors1(){
-        return $$(errorMessage1);
+    public List<WebElement> getErrors1(){
+        return driver.findElements(errorMessage1);
     }
 
-    public ElementsCollection getErrors2(){
-        return $$(errorMessage2);
+    public List<WebElement> getErrors2(){
+        return driver.findElements(errorMessage2);
     }
 
-    public ElementsCollection getErrors3(){
-        return $$(errorMessage3);
+    public List<WebElement> getErrors3(){
+        return driver.findElements(errorMessage3);
     }
 
-    public ElementsCollection getErrors4(){
-        return $$(errorMessage4);
+    public List<WebElement> getErrors4(){
+        return driver.findElements(errorMessage4);
     }
 
-    public ElementsCollection getErrors5(){
-        return $$(errorMessage5);
+    public List<WebElement> getErrors5(){
+        return driver.findElements(errorMessage5);
+    }
+    public boolean isErrorVisible(String message){
+        return driver.findElements(By.xpath(format(errorMessageText, message))).size() > 0
+                && driver.findElements(By.xpath(format(errorMessageText, message))).get(0).isDisplayed();
     }
 
-    public SelenideElement getError(String message){
-        return $(By.xpath(format(errorMessageText, message)));
-    }
 
 }
