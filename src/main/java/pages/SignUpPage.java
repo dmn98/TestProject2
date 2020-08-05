@@ -1,7 +1,7 @@
 package pages;
 
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
+import net.serenitybdd.core.pages.WebElementFacade;
+import net.thucydides.core.annotations.DefaultUrl;
 import net.thucydides.core.pages.PageObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,13 +13,8 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
-public class SignUpPage {
-    WebDriver driver;
-    
-    public SignUpPage(WebDriver driver){
-        this.driver = driver;
-    }
-
+@DefaultUrl("https://www.spotify.com/by-ru/signup/")
+public class SignUpPage extends PageObject{
 
 
     private By emailField = By.xpath("//input[@id='email']");
@@ -46,48 +41,49 @@ public class SignUpPage {
     private String errorMessageText = "//div[contains(text(),'%s')]";
     
     public SignUpPage typeEmail(String email){
-        driver.findElement(emailField).sendKeys(email);
+        find(emailField).sendKeys(email);
         return this;
     }
 
     public SignUpPage typeConfirmEmail(String email){
-        driver.findElement(confirmEmail).sendKeys(email);
+        find(confirmEmail).sendKeys(email);
         return this;
     }
 
     public SignUpPage typePassword(String password){
-        driver.findElement(passwordField).sendKeys(password);
+        find(passwordField).sendKeys(password);
         return this;
     }
 
     public SignUpPage typeName(String name){
-        driver.findElement(nameField).sendKeys(name);
+        find(nameField).sendKeys(name);
         return this;
     }
 
     public SignUpPage typeDay(String day){
-        driver.findElement(dayOfBirthField).sendKeys(day);
+        find(dayOfBirthField).sendKeys(day);
         return this;
     }
 
     public SignUpPage setMonth(String month){
-        driver.findElement(monthDropDown).click();
-        new WebDriverWait(driver,5).until(visibilityOfElementLocated(By.xpath(format(monthDropDownOption, month)))).click();
+        find(monthDropDown).click();
+        find(By.xpath(format(monthDropDownOption, month))).waitUntilVisible().click();
+      //  new WebDriverWait(driver,5).until(visibilityOfElementLocated(By.xpath(format(monthDropDownOption, month)))).click();
         return this;
     }
 
     public SignUpPage typeYear(String year){
-        driver.findElement(yearOfBirthField).sendKeys(year);
+        find(yearOfBirthField).sendKeys(year);
         return this;
     }
 
     public SignUpPage setSex(String value){
-       driver.findElement(By.xpath(format(sexRadioButton, value))).click();
+       find(By.xpath(format(sexRadioButton, value))).click();
        return this;
     }
 
     public SignUpPage setShare(boolean value){
-        WebElement checkbox = driver.findElement(shareCheckBox);
+        WebElement checkbox = find(shareCheckBox);
         if (!checkbox.isSelected() == value){
             checkbox.click();
         }
@@ -95,31 +91,31 @@ public class SignUpPage {
     }
 
     public void clickSignUpButton(){
-        driver.findElement(signUpButton).click();
+        find(signUpButton).click();
     }
 
-    public List<WebElement> getErrors1(){
-        return driver.findElements(errorMessage1);
+    public List<WebElementFacade> getErrors1(){
+        return findAll(errorMessage1);
     }
 
-    public List<WebElement> getErrors2(){
-        return driver.findElements(errorMessage2);
+    public List<WebElementFacade> getErrors2(){
+        return findAll(errorMessage2);
     }
 
-    public List<WebElement> getErrors3(){
-        return driver.findElements(errorMessage3);
+    public List<WebElementFacade> getErrors3(){
+        return findAll(errorMessage3);
     }
 
-    public List<WebElement> getErrors4(){
-        return driver.findElements(errorMessage4);
+    public List<WebElementFacade> getErrors4(){
+        return findAll(errorMessage4);
     }
 
-    public List<WebElement> getErrors5(){
-        return driver.findElements(errorMessage5);
+    public List<WebElementFacade> getErrors5(){
+        return findAll(errorMessage5);
     }
     public boolean isErrorVisible(String message){
-        return driver.findElements(By.xpath(format(errorMessageText, message))).size() > 0
-                && driver.findElements(By.xpath(format(errorMessageText, message))).get(0).isDisplayed();
+        return findAll(By.xpath(format(errorMessageText, message))).size() > 0
+                && findAll(By.xpath(format(errorMessageText, message))).get(0).isDisplayed();
     }
 
 

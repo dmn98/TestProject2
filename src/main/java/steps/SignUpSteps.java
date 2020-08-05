@@ -1,10 +1,16 @@
 package steps;
 
 import net.thucydides.core.annotations.Step;
+import org.assertj.core.api.Assertions;
 import pages.SignUpPage;
 
 public class SignUpSteps {
     SignUpPage page;
+
+    @Step
+    public void open_signup_page(){
+        page.open();
+    }
 
     @Step("User types email (0)")
     public void type_email(String mail){
@@ -46,5 +52,15 @@ public class SignUpSteps {
     public void click_singUp(){
         page.clickSignUpButton();
     }
-
+    @Step
+    public void should_see_error(String message) {
+        Assertions.assertThat(page.isErrorVisible(message))
+                .as("User should see message, but he doesn't")
+                .isTrue();
+    }
+    public void should_not_see_error(String message) {
+        Assertions.assertThat(page.isErrorVisible(message))
+                .as("User should not see message, but he does")
+                .isFalse();
+    }
 }
